@@ -124,7 +124,7 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 
 const repeatMyParam = () => {
     axios
-        .get(`http://localhost:3000/repeat/Rainbows & Sunshine Button!`)
+        .get(`http://localhost:3000/repeat/Rainbows & da Sunshine Button!`)
         .then (response => {
             console.log(response.data)
             document.getElementById('repeat-button').textContent = response.data
@@ -230,66 +230,72 @@ const createFood = (event) => {
     const foodInput = document.getElementById('food-text')
     const body = {newFood: `${foodInput.value}`}
 
-    foodSection.innerHTML = ''
 
     axios
     .post('http://localhost:3000/food', body)
     .then(response => {
+
+        let newDiv = document.createElement('div')
+        foodSection.appendChild(newDiv)
+
         let newP = document.createElement('p')
-        document.querySelector('div').appendChild(newP)
-        // newP.textContent = 'hello'
+        newDiv.appendChild(newP)
+       
+        let newDelBtn = document.createElement('button')
+        newDiv.appendChild(newDelBtn)
+
+        newDelBtn.textContent = 'delete'
         newP.textContent = foodInput.value
-        // newP.classList.add('pee')
-        // document.getElementsByClassName('pee').textContent = foodInput
-        console.log(foodInput, foods, newP.textContent)
+        foodInput.value = ''
+
+        newDelBtn.addEventListener('click', deleteFood)
 
     })
-    .catch(error => {console.log(error)})
-
-    // foodInput.value = ''
+    .catch(error => {console.log(error)
+    })
 }
 
-const clearInputBar = () => {
-    foodInput.value = ''
+const deleteFood = (event) => {
+    event.preventDefault()
+
+    // console.log(event.target.parentNode)
+    const deletedFood = event.target.parentNode.firstChild.innerText
+    event.target.parentNode.remove()
+
+    let message = document.createElement('p')
+    message.textContent = `you deleted ${deletedFood}`
+    document.getElementsByTagName('body')[0].appendChild(message)
+    setTimeout(() => {message.remove()}, 1500)
+
+    setTimeout(() => {myAlert(deletedFood)}) // even though no time, still makes alert run after. puts it in secondary queue
+}
+
+const myAlert = (deletedFood) => {
+    console.log('alerted yo')
+    alert(`you deleted ${deletedFood}`)
 }
 
 const foodButton = document.getElementById('food-button')
 foodButton.addEventListener('click', createFood)
 
-// function createFood(event){
-//     event.preventDefault()
 
-//     const foodInput = document.querySelector('#food-input')
-//     const foodSection = document.querySelector('#food-section')
+const imageInput = document.getElementById('URL-input')
+const imageButton = document.getElementById('image-button')
 
-//     const body = {
-//         newFood: foodInput.value
-//     }
-    
-//     // while(foodSection.childNodes.length > 0){
-//     //     foodSection.removeChild(foodSection.lastChild)
-//     // }
-//     foodSection.innerHTML = ''
+const displayImage = event => {
+    event.preventDefault()
 
-//     axios.post('http://localhost:3000/food', body)
-//         .then(res => {
-//             console.log(res.data)
-//             for(let i = 0; i < res.data.length; i++){
-//                 const newP = document.createElement('p')
-//                 newP.textContent = res.data[i]
-//                 foodSection.appendChild(newP)
-//             }
-//         })
-        
-//     foodInput.value = ''
-// }
+    const image = document.createElement('img')
+    image.src = `${imageInput.value}`
+    image.style = 'width: 300px; height: auto;'
+    console.log('my image is ' + image.src, imageInput.value)
+    document.getElementById('pics').appendChild(image)
 
-// document.querySelector('form').addEventListener('submit', createFood)
+}
 
-//  <section >
-//         <form>
-//             Enter a food: <input type="text" placeholder="Enter a food!" id="food-input"/>
-//             <button>Add Food</button>
-//         </form>
-//         <div id="food-section"></div>
-//     </section >
+imageButton.addEventListener('click', displayImage)
+
+
+
+
+// https://i.guim.co.uk/img/media/fe1e34da640c5c56ed16f76ce6f994fa9343d09d/0_174_3408_2046/master/3408.jpg?width=465&quality=45&auto=format&fit=max&dpr=2&s=cbe66879ae8c0ac09975d945f39137f6
